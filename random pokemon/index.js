@@ -8,16 +8,16 @@ app.use(cors());
 app.use(express.json());
 
 
-
+/*
 app.get("/", async (req,res,next) => {
   const id = Math.floor(Math.random() * 50) + 1;
   const pokemon = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
   res.json(await pokemon.json());
 } );
+*/
 
 
 
-/*
 var megaPublisher = mqtt.connect("mqtt://broker.hivemq.com")
 var subscriber;
 
@@ -73,7 +73,7 @@ app.get("/*", async (req,res,next) => {
     const pokemon = {"poke":"mon"};//await getPokemon();
     res.json(pokemon);
 } );
-*/
+
 app.listen(8001, () => {
   console.log("Gateway is Listening to Port 8001");
 });
