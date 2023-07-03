@@ -12,38 +12,82 @@ app.use(express.json());
 
 
 
+app.get("/id/:id", async (req,res,next) => {
+  let { id } = req.params;
+  id = parseInt(id);
+  console.log(id);
+  for(let i=0;i<50;i++){
+    let pokemon = await fetch(`http://localhost:8000/pokemon/random`);
+    
+    pokemon = await pokemon.json()
+    console.log(pokemon.name,pokemon.id);
+    if( pokemon.id === id ) {
+      pokemon.attempt = i+1;
+      res.json(pokemon);
+      return;
+    }
+  }
+ 
+  res.send("Pokemon not found");
+  
+} );
+
+app.get("/name/:name", async (req,res,next) => {
+  let { name } = req.params;
+  
+  console.log(name);
+  for(let i=0;i<50;i++){
+    let pokemon = await fetch(`http://localhost:8000/pokemon/random`);
+    
+    pokemon = await pokemon.json()
+    console.log(pokemon.name,pokemon.id);
+    if( pokemon.name === name ) {
+      pokemon.attempt = i+1;
+      res.json(pokemon);
+      return;
+    }
+  }
+ 
+  res.send("Pokemon not found");
+  
+} );
+
+
+/*
+connectToMqtt = () => {
+  subscriber = mqtt.connect("mqtt://broker.hivemq.com")
+  subscriber.subscribe("pokemon");
+}
+
+disconnectFromMqtt = () => {
+  subscriber.unsubscribe("pokemon");
+  subscriber.end();
+}
+
 
 
 app.get("/id/:id", async (req,res,next) => {
     let { id } = req.params;
-   /* const pokemon = await fetch(`http://localhost:8001/pokemon/random`);
-    const pokemonData = await pokemon.json();
-    res.json(pokemonData);
-    return;*/
-    subscriber = mqtt.connect("mqtt://broker.hivemq.com")
-    subscriber.subscribe("pokemon");
- 
-    console.log("hello",id);
-    id= parseInt(id);
-    let i =0;
+    id = parseInt(id);
+
+    connectToMqtt();
+
+    let i = 0;
     subscriber.on('message', function(topic, message) {
       // console.log("msg: " + message.toString())
       const pokemon = JSON.parse(message);
-      i = i+1;
+      i = i + 1;
       console.log(pokemon.name,pokemon.id,i);
       
       if( pokemon.id === id ) {
-        subscriber.unsubscribe("pokemon");
-        subscriber.end();
+        disconnectFromMqtt();
         res.json(pokemon);
         return;
       }else if( i === 10 ){
-        subscriber.unsubscribe("pokemon");
-        subscriber.end();
+        disconnectFromMqtt();
         res.status(404).json({message:"Pokemon not found"} );
         return;
-      }else if(i>10){
-        // subscriber.unsubscribe("pokemon");
+      }else if(i > 10){
         return;
       }
      
@@ -53,54 +97,42 @@ app.get("/id/:id", async (req,res,next) => {
     
 } );
 
+
+
 app.get("/name/:name", async (req,res,next) => {
   
   const name = req.params.name;
- /* const pokemon = await fetch(`http://localhost:8001/pokemon/random`);
-    const pokemonData = await pokemon.json();
-    res.json(pokemonData);
-    return;*/
-    subscriber = mqtt.connect("mqtt://broker.hivemq.com")
-    subscriber.subscribe("pokemon");
+  connectToMqtt();
  
-    console.log("hello",name);
-  
-    let i = 0;
-    subscriber.on('message', function(topic, message) {
-      // console.log("msg: " + message.toString())
-      const pokemon = JSON.parse(message);
-      i = i+1;
-      console.log(pokemon.name,pokemon.id,i);
-      
-      if( pokemon.name === name ) {
-        subscriber.unsubscribe("pokemon");
-        subscriber.end();
-        res.json(pokemon);
-        return;
-      }else if( i === 10 ){
-        subscriber.unsubscribe("pokemon");
-        subscriber.end();
-        res.status(404).json({message:"Pokemon not found"} );
-        return;
-      }else if(i>10){
-        // subscriber.unsubscribe("pokemon");
-        return;
-      }
-     
+   
+  let i = 0;
+  subscriber.on('message', function(topic, message) {
+    // console.log("msg: " + message.toString())
+    const pokemon = JSON.parse(message);
+    i = i+1;
+    console.log(pokemon.name,pokemon.id,i);
+    
+    if( pokemon.name === name ) {
+      disconnectFromMqtt();
+      res.json(pokemon);
+      return;
+    }else if( i === 10 ){
+      disconnectFromMqtt();
+      res.status(404).json({message:"Pokemon not found"} );
+      return;
+    }else if(i>10){
+      // subscriber.unsubscribe("pokemon");
+      return;
+    }
+    
    });
 
 } );
+*/
 app.get("/*", async (req,res,next) => {
-  
-  let fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl+req.fullUrl;
-  console.log(fullUrl);
-  console.log("helloo");
-    const pokemon = {"poke":"mon"};//await getPokemon();
-    console.log(pokemon.name);
-    // subscriber.unsubscribe("pokemon");
-    // const pokemonData = await pokemon.json();
-    // console.log(pokemonData);
-    res.json(pokemon);
+
+  const pokemon = {"poke":"mon"};//await getPokemon();
+  res.json(pokemon);
 
 } );
 

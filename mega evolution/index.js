@@ -11,10 +11,8 @@ client.on('connect', function() {
 client.on('message', function(topic, message) {
   //  console.log("msg: " + message.toString())
     const msg = JSON.parse(message);
-   
-    const res = msg.res;
     const pokemon = msg.pokemon;
     pokemon.name = "Mega "+pokemon.name;
-    res(pokemon);
+    console.log("Congratulations! your pokemon has evolved into "+pokemon.name);
 
 })

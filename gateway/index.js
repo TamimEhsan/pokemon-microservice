@@ -8,7 +8,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/pokemon/random", proxy("http://localhost:8001"));
-app.use("/pokemon/fixed",/* */ proxy("http://localhost:8002"));
+app.use("/pokemon/fixed",/**/ proxy("http://localhost:8002"));
 
 app.listen(8000, () => {
   console.log("Gateway is Listening to Port 8000");
